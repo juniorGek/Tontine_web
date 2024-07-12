@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useWelcome } from "../../../hook/WelcomeContext";
 import { useNavigate } from "react-router-dom";
 
-const AddUser = () => {
+const AddUser = ({user}) => {
     const { setWelcomeMessage } = useWelcome();
     const navigate =useNavigate()
   const [form, setForm] = useState({
@@ -87,7 +87,7 @@ const AddUser = () => {
 
   return (
     <div>
-      <SideBar>
+      <SideBar user={user} >
         <ToastContainer position="top-right" />
           <div className="flex justify-center items-center mb-5 bg-gray-100 p-4 rounded-lg shadow-md">
             <form className="w-full max-w-4xl p-4" onSubmit={(e) => e.preventDefault()}>
