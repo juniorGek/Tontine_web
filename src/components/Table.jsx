@@ -30,10 +30,10 @@ const Table = ({ users, onDelete, onEdit }) => {
                 </thead>
                 <tbody>
                 {currentPageData.map(user => (
-                    <tr key={user.id} className="text-gray-700 hover:bg-gray-100">
-                    <td className="py-2 px-4 border border-gray-300">{user.name}</td>
+                    <tr key={user._id} className="text-gray-700 hover:bg-gray-100">
+                    <td className="py-2 px-4 border border-gray-300">{user.nom}</td>
                     <td className="py-2 px-4 border border-gray-300">{user.email}</td>
-                    <td className="py-2 px-4 border border-gray-300">{user.type}</td>
+                    <td className="py-2 px-4 border border-gray-300">{user.typeUser}</td>
                     <td className="py-2 px-4 border border-gray-300">
                         <span className={`px-2 py-1 rounded-full text-white ${user.status ? 'bg-green-500' : 'bg-red-500'}`}>
                         {user.status ? 'Active' : 'Inactive'}

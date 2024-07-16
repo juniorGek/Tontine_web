@@ -1,16 +1,33 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import SideBar from '../global/SideBar';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useWelcome } from '../../../hook/WelcomeContext';
 
 const Agent = ({ user }) => {
+
+  const { welcomeMessage, setWelcomeMessage } = useWelcome();
+
+
   const navigate = useNavigate();
   const handleAgent= ()=>{
     navigate('/admin/add_agent')
   }
 
+  useEffect(() => {
+    if (welcomeMessage) {
+      toast.success(welcomeMessage);
+      setWelcomeMessage(""); // Reset the welcome message
+    }
+  }, [welcomeMessage, setWelcomeMessage]);
+
+
+
   return (
     <div className="">
       <SideBar user={user}>
+      <ToastContainer position="top-right" />
         <div className='flex p-5'>
           <div className="relative flex flex-col text-gray-700 bg-white shadow-md w-full rounded-xl bg-clip-border">
             <h1 className="text-xl font-bold p-4 text-center">Liste des agents</h1>
