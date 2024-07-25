@@ -32,12 +32,19 @@ const User = ({ user }) => {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      if (response.status === 401) {
+        // Recharger la page en cas d'erreur 401
+        window.location.reload();
+        return; // Arrête l'exécution de la fonction
+      }
+
       if (!response.ok) {
         throw new Error("Failed to fetch users");
       }
       const data = await response.json();
-      console.log(data.user);
-      setUsers(Array.isArray(data.user) ? data.user : []);
+      console.log(data.users);
+      setUsers(Array.isArray(data.users) ? data.users : []);
     } catch (error) {
       toast.error("Erreur lors de la récupération des utilisateurs");
     }
@@ -48,9 +55,8 @@ const User = ({ user }) => {
   }, []);
 
   useEffect(() => {
-    console.log('Current users state:', users);
+    console.log("Current users state:", users);
   }, [users]);
-  
 
   const navigate = useNavigate();
 

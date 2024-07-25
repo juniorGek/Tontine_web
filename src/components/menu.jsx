@@ -4,26 +4,32 @@ import { IoSettings } from "react-icons/io5";
 import { IoIosStats } from "react-icons/io";
 import { AiFillDashboard } from "react-icons/ai";
 import { FaRegUser } from "react-icons/fa";
+import { FaPersonChalkboard } from "react-icons/fa6";
+import { MdRealEstateAgent } from "react-icons/md";
+import { TbPigMoney } from "react-icons/tb";
+import { FaMoneyBillTransfer } from "react-icons/fa6";
+
 
 const getMenu = (user) => {
   const baseMenu = [
     { title: 'dashboard', icon: <AiFillDashboard />, route: '/admin/dashboard' },
     { title: 'utilisateur', route: '/admin/user', icon: <FaRegUser /> },
-    { title: 'Agent', spacing: true, route: '/admin/profile_agent' },
+    { title: 'Agent', spacing: true, icon: <MdRealEstateAgent /> ,route: '/admin/profile_agent' },
+    { title: 'Tontine', icon: <TbPigMoney />, route: '/settings' },
     {
-      title: 'Projects',
+      title: 'Client',
       submenu: true,
-      route: '/projects',
+      route: '/admin/client',
+      icon: <FaPersonChalkboard />,
       menuitem: [
-        { title: 'submenu1', route: '/projects/submenu1' },
-        { title: 'submenu2', route: '/projects/submenu2' },
-        { title: 'submenu3', route: '/projects/submenu3' },
+        { title: 'Nouveau inscription', route: '/admin/client/new' },
+        { title: 'Inscription en attente', route: '/projects/submenu2' },
+        { title: 'Cotisations', route: '/projects/submenu3' },
       ],
     },
+    { title: 'Compte', icon: <FaMoneyBillTransfer />, spacing: true, route: '/profile' },
     { title: 'Statistics', icon: <IoIosStats />, route: '/statistics' },
     { title: 'Inbox', route: '/inbox' },
-    { title: 'Profile', icon: <CgProfile />, spacing: true, route: '/profile' },
-    { title: 'Settings', icon: <IoSettings />, route: '/settings' },
     { title: 'Logout', icon: <TbLogout2 />, route: '/admin/logout' },
   ];
 

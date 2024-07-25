@@ -19,6 +19,9 @@ import AddUser from "./Pages/admin/Screens/AddUser";
 import Logout from "./Pages/Auth/Logout";
 import Agent from "./Pages/admin/Screens/Agent";
 import AddAgent from "./Pages/admin/Screens/AddAgent";
+import DetailAgent from "./Pages/admin/Screens/DetailAgent";
+import NewClient from "./Pages/admin/Screens/Client/NewClient";
+import Client from "./Pages/admin/Screens/Client/Client";
 
 
 function App() {
@@ -60,6 +63,10 @@ function App() {
           path="/admin/add_agent"
           element={<ProtectedRoute element={<AddAgent />} />}
         />
+
+        <Route path="/admin/detailAgent/:id" element={<ProtectedRoute element={<DetailAgent />} />} />
+        <Route path="/admin/client/new" element={<ProtectedRoute element={<NewClient />} />} />
+        <Route path="/admin/client" element={<ProtectedRoute element={<Client />} />} />
 
         <Route path="/admin/logout" element={<ProtectedRoute element={<Logout />} />} />
 
