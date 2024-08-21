@@ -2,7 +2,7 @@ import { TbLogout2 } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
 import { IoSettings } from "react-icons/io5";
 import { IoIosStats } from "react-icons/io";
-import { AiFillDashboard } from "react-icons/ai";
+import { AiFillDashboard, AiFillPushpin } from "react-icons/ai";
 import { FaRegUser } from "react-icons/fa";
 import { FaPersonChalkboard } from "react-icons/fa6";
 import { MdRealEstateAgent } from "react-icons/md";
@@ -23,12 +23,13 @@ const getMenu = (user) => {
       icon: <FaPersonChalkboard />,
       menuitem: [
         { title: 'Nouveau inscription', route: '/admin/client/new' },
-        { title: 'Inscription en attente', route: '/projects/submenu2' },
+        { title: 'Inscription en attente', route: '/admin/client/waitClient' },
         { title: 'Cotisations', route: '/projects/submenu3' },
       ],
     },
     { title: 'Compte', icon: <FaMoneyBillTransfer />, spacing: true, route: '/profile' },
     { title: 'Statistics', icon: <IoIosStats />, route: '/statistics' },
+    { title: 'Fonctions', icon: <AiFillPushpin />, route: '/admin/Fonctions' },
     { title: 'Inbox', route: '/inbox' },
     { title: 'Logout', icon: <TbLogout2 />, route: '/admin/logout' },
   ];

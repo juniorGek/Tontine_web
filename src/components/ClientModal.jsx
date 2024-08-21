@@ -1,10 +1,10 @@
 import React, { useRef } from "react";
 import logo from "../assets/image/slider-img.png";
 
-const Modal = ({ showModal, handleClose, formData }) => {
+const Modal = ({ showModal, handleClose, formData, compte }) => {
   const modalRef = useRef();
-
   const handlePrint = () => {
+    
     const printContents = modalRef.current.innerHTML;
     const originalContents = document.body.innerHTML;
 
@@ -44,6 +44,10 @@ const Modal = ({ showModal, handleClose, formData }) => {
           <h2 className="text-2xl font-bold text-center mb-4">Reçu de Client</h2>
           <ul className="mb-4">
             <li className="flex justify-between py-2 border-b">
+              <strong>Numero de compte:</strong>
+              <span>{compte}</span>
+            </li>
+            <li className="flex justify-between py-2 border-b">
               <strong>Nom:</strong>
               <span>{formData.nom}</span>
             </li>
@@ -73,7 +77,7 @@ const Modal = ({ showModal, handleClose, formData }) => {
             </li>
             <li className="flex justify-between py-2 border-b">
               <strong>Notes:</strong>
-              <span>{formData.notes}</span>
+              <span>{formData.note}</span>
             </li>
           </ul>
           <div className="flex justify-end">

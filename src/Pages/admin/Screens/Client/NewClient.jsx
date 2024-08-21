@@ -4,32 +4,29 @@ import StepOne from "../../../../components/StepOne";
 import StepTwo from "../../../../components/StepTwo";
 import StepThree from "../../../../components/StepTree";
 import Modal from "../../../../components/ClientModal";
+import { API_ADMIN } from "../../../../config/endPoint";
+import { useWelcome } from "../../../../hook/WelcomeContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { resetForm } from "../../../../utils/formUtils";
 
 const NewClient = ({ user }) => {
-  const agents = [
-    { id: '1', name: 'Agent 1' },
-    { id: '2', name: 'Agent 2' },
-    { id: '3', name: 'Agent 3' }
-  ];
-  const compte = [
-    { id: 'Tontine', name: 'Tontine' },
-    { id: 'Access', name: 'Access' },
-    { id: 'Global', name: 'Global' }
-  ];
-
   const [step, setStep] = useState(1);
+  const [compte, setCompte] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const { setWelcomeMessage } = useWelcome();
   const [formData, setFormData] = useState({
-    nom: '',
-    prenom: '',
-    email: '',
-    tel: '',
-    adresse: '',
-    cni:'',
-    montant: '',
-    agentId: '',
-    compte: '',
-    note: '',
+    nom: "",
+    prenom: "",
+    email: "",
+    tel: "",
+    adresse: "",
+    cni: "",
+    genre: "",
+    montant: "",
+    agentId: "",
+    typeCompte: "",
+    note: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -48,12 +45,43 @@ const NewClient = ({ user }) => {
     setStep((prevStep) => Math.max(prevStep - 1, 1));
   };
 
-  const handleSubmit = () => {
-    console.log(formData)
-    setShowModal(true);
+  const handleSubmit = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${API_ADMIN}/addClient`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setCompte(data.compte); // Affiche la réponse de l'API en cas de succès
+        console.log(compte)
+        setShowModal(true);
+      } else {
+        if (response.status === 401) {
+          // Recharge la page en cas d'erreur 401
+          window.location.reload();
+        } else {
+          const errorData = await response.json();
+          console.error("Erreur lors de l'enregistrement:", errorData.message);
+          toast.error(errorData.message);
+          resetForm(setFormData, setStep );
+        }
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'enregistrement:", error.message);
+      toast.error(error.message);
+      // Gérer les erreurs de fetch ou autres erreurs
+    }
   };
 
   const handleCloseModal = () => {
+    resetForm(setFormData, setStep);
     setShowModal(false);
   };
 
@@ -62,6 +90,7 @@ const NewClient = ({ user }) => {
 
     if (step === 1) {
       if (!formData.nom) newErrors.nom = "Nom is required";
+      if (!formData.genre) newErrors.genre = "genre is required";
       if (!formData.prenom) newErrors.prenom = "Prenom is required";
       if (!formData.email) newErrors.email = "Email is required";
     }
@@ -81,20 +110,44 @@ const NewClient = ({ user }) => {
   const renderStep = () => {
     switch (step) {
       case 1:
-        return <StepOne formData={formData} setFormData={setFormData} errors={errors} />;
+        return (
+          <StepOne
+            formData={formData}
+            setFormData={setFormData}
+            errors={errors}
+          />
+        );
       case 2:
-        return <StepTwo formData={formData} setFormData={setFormData} errors={errors} />;
+        return (
+          <StepTwo
+            formData={formData}
+            setFormData={setFormData}
+            errors={errors}
+          />
+        );
       case 3:
-        return <StepThree formData={formData} setFormData={setFormData}  errors={errors} />;
+        return (
+          <StepThree
+            formData={formData}
+            setFormData={setFormData}
+            errors={errors}
+          />
+        );
       default:
-        return <StepOne formData={formData} setFormData={setFormData} errors={errors} />;
+        return (
+          <StepOne
+            formData={formData}
+            setFormData={setFormData}
+            errors={errors}
+          />
+        );
     }
-    
   };
 
   return (
     <SideBar user={user}>
       <div className="p-8">
+        <ToastContainer position="top-right" />
         <h2 className="text-2xl font-bold mb-4">Nouveau Client</h2>
         {renderStep()}
         <div className="flex justify-between mt-4">
@@ -113,7 +166,12 @@ const NewClient = ({ user }) => {
           </button>
         </div>
       </div>
-      <Modal showModal={showModal} handleClose={handleCloseModal} formData={formData} />
+      <Modal
+        showModal={showModal}
+        handleClose={handleCloseModal}
+        formData={formData}
+        compte={compte}
+      />
     </SideBar>
   );
 };

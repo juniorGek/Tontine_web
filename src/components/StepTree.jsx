@@ -69,8 +69,8 @@ const StepThree = ({ formData, setFormData,  }) => {
         <label className="block text-lg mb-2">
           Type de Compte:
           <select
-            name="compte"
-            value={formData.compte}
+            name="typeCompte"
+            value={formData.typeCompte}
             onChange={handleChange}
             className="w-full px-3 py-3 border rounded focus:border-blue-500 focus:border-2 focus:outline-none"
           >
@@ -116,8 +116,8 @@ const StepThree = ({ formData, setFormData,  }) => {
         <label className="block mb-2">
           Notes:
           <textarea
-            name="notes"
-            value={formData.notes}
+            name="note"
+            value={formData.note}
             onChange={handleChange}
             className="w-full px-3 py-3 border rounded focus:border-blue-500 focus:border-2 focus:outline-none"
           ></textarea>

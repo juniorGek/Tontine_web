@@ -22,7 +22,10 @@ import AddAgent from "./Pages/admin/Screens/AddAgent";
 import DetailAgent from "./Pages/admin/Screens/DetailAgent";
 import NewClient from "./Pages/admin/Screens/Client/NewClient";
 import Client from "./Pages/admin/Screens/Client/Client";
-
+import WaitClient from "./Pages/admin/Screens/Client/WaitClient";
+import FonctionList from "./Pages/admin/Screens/Fonctions/FonctionList";
+import AfterRegister from "./Pages/Auth/AfterRegister";
+import DetailClient from "./Pages/admin/Screens/Client/DetailClient";
 
 function App() {
   return (
@@ -33,7 +36,8 @@ function App() {
         <Route path="/about" index element={<About />} />
         <Route path="/service" index element={<Service />} />
         <Route path="/register" index element={<Register />} />
-        
+        <Route path="/after" index element={<AfterRegister />} />
+
         <Route
           path="/admin/login"
           index
@@ -64,11 +68,37 @@ function App() {
           element={<ProtectedRoute element={<AddAgent />} />}
         />
 
-        <Route path="/admin/detailAgent/:id" element={<ProtectedRoute element={<DetailAgent />} />} />
-        <Route path="/admin/client/new" element={<ProtectedRoute element={<NewClient />} />} />
-        <Route path="/admin/client" element={<ProtectedRoute element={<Client />} />} />
+        <Route
+          path="/admin/detailAgent/:id"
+          element={<ProtectedRoute element={<DetailAgent />} />}
+        />
+        <Route
+          path="/admin/client/new"
+          element={<ProtectedRoute element={<NewClient />} />}
+        />
+        <Route
+          path="/admin/client/waitClient"
+          element={<ProtectedRoute element={<WaitClient />} />}
+        />
+        <Route
+          path="/admin/client"
+          element={<ProtectedRoute element={<Client />} />}
+        />
 
-        <Route path="/admin/logout" element={<ProtectedRoute element={<Logout />} />} />
+        <Route
+          path="/admin/detailClient/:id"
+          element={<ProtectedRoute element={<DetailClient />} />}
+        />
+
+        <Route
+          path="/admin/Fonctions"
+          element={<ProtectedRoute element={<FonctionList />} />}
+        />
+
+        <Route
+          path="/admin/logout"
+          element={<ProtectedRoute element={<Logout />} />}
+        />
 
         <Route path="*" element={<NotFound />} />
       </Routes>

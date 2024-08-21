@@ -46,6 +46,37 @@ const StepOne = ({ formData, setFormData, errors }) => {
             }`}
           />
         </label>
+        <div className="block text-lg mb-2">
+          Genre:
+          <div className="flex items-center space-x-4">
+            <label className="inline-flex items-center">
+              <input
+                type="radio"
+                name="genre"
+                value="masculin"
+                checked={formData.genre === "masculin"}
+                onChange={handleChange}
+                className={`form-radio h-6 w-6 ${
+                  errors.genre ? "text-red-500" : "text-blue-500"
+                }`}
+              />
+              <span className="ml-2">Masculin</span>
+            </label>
+            <label className="inline-flex items-center">
+              <input
+                type="radio"
+                name="genre"
+                value="feminin"
+                checked={formData.genre === "feminin"}
+                onChange={handleChange}
+                className={`form-radio h-6 w-6 ${
+                  errors.genre ? "text-red-500" : "text-blue-500"
+                }`}
+              />
+              <span className="ml-2">Feminin</span>
+            </label>
+          </div>
+        </div>
       </form>
     </div>
   );

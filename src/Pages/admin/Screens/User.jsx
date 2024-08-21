@@ -43,7 +43,7 @@ const User = ({ user }) => {
         throw new Error("Failed to fetch users");
       }
       const data = await response.json();
-      console.log(data.users);
+      
       setUsers(Array.isArray(data.users) ? data.users : []);
     } catch (error) {
       toast.error("Erreur lors de la récupération des utilisateurs");
@@ -55,7 +55,7 @@ const User = ({ user }) => {
   }, []);
 
   useEffect(() => {
-    console.log("Current users state:", users);
+    
   }, [users]);
 
   const navigate = useNavigate();

@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import ReactPaginate from 'react-paginate';
+import { Button, Modal } from "flowbite-react";
 
 const Table = ({ users, onDelete, onEdit }) => {
     const [currentPage, setCurrentPage] = useState(0);
+    const [openModal, setOpenModal] = useState(false);
     const itemsPerPage = 10;
 
     const handlePageClick = ({ selected }) => {
@@ -40,11 +42,12 @@ const Table = ({ users, onDelete, onEdit }) => {
                         </span>
                     </td>
                     <td className="py-2 px-4 border border-gray-300">
-                        <button onClick={() => onEdit(user.id)} className="text-blue-500 hover:text-blue-700 mx-2">
+                        <button onClick={() => onEdit(user._id)} className="text-blue-500 hover:text-blue-700 mx-2">
                         <FaEdit />
                         </button>
-                        <button onClick={() => onDelete(user.id)} className="text-red-500 hover:text-red-700 mx-2">
-                        <FaTrashAlt />
+                        
+                        <button onClick={() => setOpenModal(true)} className="text-red-500 hover:text-red-700 mx-2">
+                            <FaTrashAlt />
                         </button>
                     </td>
                     </tr>
@@ -63,6 +66,26 @@ const Table = ({ users, onDelete, onEdit }) => {
                 nextLinkClassName={"px-3 py-2 border rounded"}
                 activeClassName={"bg-blue-500 text-white"}
             />
+
+            <Modal show={openModal} size="md" onClose={() => setOpenModal(false)} popup>
+                <Modal.Header />
+                <Modal.Body>
+                <div className="text-center">
+                    <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+                    <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                    Ete vous sur de vouloir supprimer ?
+                    </h3>
+                    <div className="flex justify-center gap-4">
+                    <Button color="failure" onClick={() => setOpenModal(false)}>
+                        Oui je suis sur
+                    </Button>
+                    <Button color="gray" onClick={() => setOpenModal(false)}>
+                        Non
+                    </Button>
+                    </div>
+                </div>
+                </Modal.Body>
+            </Modal>
         </div>
     );
   };
