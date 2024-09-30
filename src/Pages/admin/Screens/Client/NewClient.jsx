@@ -20,6 +20,7 @@ const NewClient = ({ user }) => {
     prenom: "",
     email: "",
     tel: "",
+    datNaiss: "",
     adresse: "",
     cni: "",
     genre: "",
@@ -60,7 +61,7 @@ const NewClient = ({ user }) => {
       if (response.ok) {
         const data = await response.json();
         setCompte(data.compte); // Affiche la réponse de l'API en cas de succès
-        console.log(compte)
+        console.log(compte);
         setShowModal(true);
       } else {
         if (response.status === 401) {
@@ -70,7 +71,7 @@ const NewClient = ({ user }) => {
           const errorData = await response.json();
           console.error("Erreur lors de l'enregistrement:", errorData.message);
           toast.error(errorData.message);
-          resetForm(setFormData, setStep );
+          resetForm(setFormData, setStep);
         }
       }
     } catch (error) {
@@ -85,6 +86,20 @@ const NewClient = ({ user }) => {
     setShowModal(false);
   };
 
+  const isValidAge = (date) => {
+    const today = new Date();
+    const birthDate = new Date(date);
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      return age - 1 >= 15;
+    }
+    return age >= 15;
+  };
+
   const validateForm = () => {
     let newErrors = {};
 
@@ -93,6 +108,11 @@ const NewClient = ({ user }) => {
       if (!formData.genre) newErrors.genre = "genre is required";
       if (!formData.prenom) newErrors.prenom = "Prenom is required";
       if (!formData.email) newErrors.email = "Email is required";
+      if (!formData.datNaiss) {
+        newErrors.datNaiss = "Date de naissance is required";
+      } else if (!isValidAge(formData.datNaiss)) {
+        newErrors.datNaiss = "L'âge doit être supérieur ou égal à 15 ans";
+      }
     }
 
     if (step === 2) {

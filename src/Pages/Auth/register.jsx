@@ -7,6 +7,8 @@ import Step4 from '../../components/Register/Step4';
 import StepIndicator from '../../components/Register/StepIndicator';
 import { API_ADMIN } from '../../config/endPoint';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
   const [step, setStep] = useState(1);
@@ -15,6 +17,7 @@ const Register = () => {
     nom: "",
     prenom: "",
     email: "",
+    datNaiss:"",
     tel: "",
     adresse: "",
     cni: "",
@@ -25,6 +28,20 @@ const Register = () => {
   });
   const [errors, setErrors] = useState({});
 
+  const isValidAge = (date) => {
+    const today = new Date();
+    const birthDate = new Date(date);
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      return age - 1 >= 15;
+    }
+    return age >= 15;
+  };
+
   const validateStep = () => {
     const newErrors = {};
 
@@ -32,6 +49,11 @@ const Register = () => {
       if (!formData.nom) newErrors.nom = true;
       if (!formData.prenom) newErrors.prenom = true;
       if (!formData.genre) newErrors.genre = true;
+      if (!formData.datNaiss) {
+        newErrors.datNaiss = true;
+      } else if (!isValidAge(formData.datNaiss)) {
+        newErrors.datNaiss = "L'âge doit être supérieur ou égal à 15 ans";
+      }
     } else if (step === 2) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const phoneRegex = /^[0-9]+$/;
@@ -89,10 +111,12 @@ const Register = () => {
           
             const errorData = await response.json();
             console.error("Erreur lors de l'enregistrement:", errorData.message);
+            toast.error(`Error: ${errorData.message}`);
 
         }
       } catch (error) {
         console.error("Erreur lors de l'enregistrement:", error.message);
+        toast.error("Erreur lors de l'enregistrement");
         
       }
     }
@@ -101,6 +125,7 @@ const Register = () => {
   return (
     <>
       <Header />
+      <ToastContainer position="top-right" />
       <div className="max-w-2xl mx-auto bg-white p-8 shadow-lg rounded-lg mt-8">
         <StepIndicator step={step} />
         {step === 1 && (

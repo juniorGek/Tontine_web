@@ -26,6 +26,7 @@ import WaitClient from "./Pages/admin/Screens/Client/WaitClient";
 import FonctionList from "./Pages/admin/Screens/Fonctions/FonctionList";
 import AfterRegister from "./Pages/Auth/AfterRegister";
 import DetailClient from "./Pages/admin/Screens/Client/DetailClient";
+import TotalClient from "./Pages/admin/Screens/Client/TotalClient";
 
 function App() {
   return (
@@ -83,6 +84,11 @@ function App() {
         <Route
           path="/admin/client"
           element={<ProtectedRoute element={<Client />} />}
+        />
+
+        <Route
+          path="/admin/totalclient"
+          element={<ProtectedRoute element={<TotalClient />} />}
         />
 
         <Route

@@ -3,7 +3,21 @@ import React from "react";
 const StepOne = ({ formData, setFormData, errors }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+
+    if (name === "datNaiss") {
+      setFormData({ ...formData, [name]: value });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  // Fonction pour formater la date au format yyyy-MM-dd
+  const formatDate = (date) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = (`0${d.getMonth() + 1}`).slice(-2);
+    const day = (`0${d.getDate()}`).slice(-2);
+    return `${year}-${month}-${day}`;
   };
 
   return (
@@ -45,6 +59,19 @@ const StepOne = ({ formData, setFormData, errors }) => {
               errors.email ? "border-red-500" : ""
             }`}
           />
+        </label>
+        <label className="block text-lg mb-2">
+          Date de naissance:
+          <input
+            type="date"
+            name="datNaiss"
+            value={formData.datNaiss ? formatDate(formData.datNaiss) : ""}
+            onChange={handleChange}
+            className={`w-full px-3 py-3 border rounded focus:border-blue-500 focus:border-2 focus:outline-none ${
+              errors.datNaiss ? "border-red-500" : ""
+            }`}
+          />
+          {errors.datNaiss && <p className="text-red-500 text-lg font-medium mt-1">{errors.datNaiss}</p>}
         </label>
         <div className="block text-lg mb-2">
           Genre:

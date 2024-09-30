@@ -67,13 +67,13 @@ const Step4 = ({ formData, setFormData, prevStep, handleSubmit }) => {
           onClick={prevStep} 
           className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
         >
-          Back
+          Precedent
         </button>
         <button 
           onClick={handleSubmit} 
           className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
         >
-          Submit
+          Soumettre
         </button>
       </div>
     </div>
