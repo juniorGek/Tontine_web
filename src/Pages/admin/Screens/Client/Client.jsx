@@ -1,9 +1,38 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import SideBar from '../../global/SideBar'
 import { useNavigate } from 'react-router-dom';
+import { API_ADMIN } from "../../../../config/endPoint";
 
 const Client = ({ user }) => {
   const navigate = useNavigate();
+  const [nbClient, setNbClient] = useState(0);
+
+  const fetchNbwaitClient = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch(`${API_ADMIN}/nbClient`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch users");
+      }
+      const data = await response.json();
+      console.log(data);
+     setNbClient(data);
+    } catch (error) {
+      console.error("Erreur lors de la récupération du nombre de clients en attente");
+    }
+  };
+
+  useEffect(() => {
+    fetchNbwaitClient();
+  }, []);
+
 
   const handleTotalClient = () => {
     navigate('/admin/totalclient');
@@ -40,7 +69,7 @@ const Client = ({ user }) => {
             className="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer transform transition-transform duration-300 hover:scale-105"
           >
             <div className="p-4">
-              <h2 className="text-xl font-semibold mb-2">Liste des Clients Rejetés</h2>
+              <h2 className="text-xl font-semibold mb-2">Liste des Clients Rejetés ( {nbClient.nbClientRefuse} ) </h2>
               <p className="text-gray-600">Voir la liste des clients dont l'inscription a été rejetée.</p>
             </div>
           </div>
@@ -51,7 +80,7 @@ const Client = ({ user }) => {
             className="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer transform transition-transform duration-300 hover:scale-105"
           >
             <div className="p-4">
-              <h2 className="text-xl font-semibold mb-2">Liste des Clients Inscrits</h2>
+              <h2 className="text-xl font-semibold mb-2">Liste des Clients Inscrits ( {nbClient.nbClientValideActif} ) </h2>
               <p className="text-gray-600">Voir la liste des clients inscrits.</p>
             </div>
           </div>
@@ -62,7 +91,7 @@ const Client = ({ user }) => {
             className="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer transform transition-transform duration-300 hover:scale-105"
           >
             <div className="p-4">
-              <h2 className="text-xl font-semibold mb-2">Liste Totale des Clients</h2>
+              <h2 className="text-xl font-semibold mb-2">Liste Totale des Clients ( {nbClient.nbTotalClient} ) </h2>
               <p className="text-gray-600">Voir la liste de tous les clients.</p>
             </div>
           </div>
@@ -73,7 +102,7 @@ const Client = ({ user }) => {
             className="bg-white shadow-lg rounded-lg overflow-hidden cursor-pointer transform transition-transform duration-300 hover:scale-105"
           >
             <div className="p-4">
-              <h2 className="text-xl font-semibold mb-2">Liste des Clients en Entente</h2>
+              <h2 className="text-xl font-semibold mb-2">Liste des Clients en Entente ( {nbClient.nbWaitClient} )  </h2>
               <p className="text-gray-600">Voir la liste des clients en attente de confirmation.</p>
             </div>
           </div>

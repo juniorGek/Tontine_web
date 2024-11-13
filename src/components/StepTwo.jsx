@@ -15,6 +15,9 @@ const StepTwo = ({ formData, setFormData, errors }) => {
           <input
             type="tel"
             name="tel"
+            onInput={(e) => {
+              e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            }}
             value={formData.tel}
             onChange={handleChange}
             pattern="\d*"
@@ -40,6 +43,9 @@ const StepTwo = ({ formData, setFormData, errors }) => {
           <input
             type="text"
             name="cni"
+            onInput={(e) => {
+              e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            }}
             value={formData.cni}
             onChange={handleChange}
             className={`w-full px-3 py-3 border rounded focus:border-blue-500 focus:border-2 focus:outline-none ${

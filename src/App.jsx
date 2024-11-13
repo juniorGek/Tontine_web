@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import Nav from "./components/nav";
 import Main from "./components/main";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Home from "./Pages/home";
 import Contact from "./Pages/Contact";
 import Header from "./components/header";
@@ -27,12 +27,22 @@ import FonctionList from "./Pages/admin/Screens/Fonctions/FonctionList";
 import AfterRegister from "./Pages/Auth/AfterRegister";
 import DetailClient from "./Pages/admin/Screens/Client/DetailClient";
 import TotalClient from "./Pages/admin/Screens/Client/TotalClient";
+import Categorie from "./Pages/admin/Screens/Fonctions/Categorie";
+import Zone from "./Pages/admin/Screens/Fonctions/Zone";
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path="/" index element={<Home />} />
+
+        {/* <Route path="/" index element={<Home />} /> */}
+
+        {/* Redirection par défaut vers /home/fr */}
+        <Route path="/" element={<Navigate to="/home/fr" replace />} />
+        
+        {/* Route dynamique pour la page d'accueil avec paramètre de langue */}
+        <Route path="/home/:lang" element={<Home />} />
+
         <Route path="/contact" index element={<Contact />} />
         <Route path="/about" index element={<About />} />
         <Route path="/service" index element={<Service />} />
@@ -100,6 +110,17 @@ function App() {
           path="/admin/Fonctions"
           element={<ProtectedRoute element={<FonctionList />} />}
         />
+
+        <Route
+          path="/admin/Fonctions/Categories"
+          element={<ProtectedRoute element={<Categorie />} />}
+        />
+
+        <Route
+          path="/admin/Fonctions/zone"
+          element={<ProtectedRoute element={<Zone />} />}
+        />
+
 
         <Route
           path="/admin/logout"

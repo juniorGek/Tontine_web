@@ -11,7 +11,32 @@ import { useWelcome } from "../../../hook/WelcomeContext";
 const AddAgent = ({ user }) => {
   const [errors, setErrors] = useState({});
   const { setWelcomeMessage } = useWelcome();
+  const [zoneOptions, setZoneOptions] = useState([]);
   const navigate = useNavigate();
+
+
+  useEffect(() => {
+    const fetchZones = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        console.log('token', token);
+        const response = await fetch(`${API_ADMIN}/listZone`, { method: "GET" });
+        if (response.ok) {
+          const zones = await response.json();
+          console.log(zones);
+        } else {
+          console.error("Erreur lors de la récupération des zones");
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération des zones:", error);
+      }
+    };
+
+    fetchZones();
+  }, []);
+
+
+
 
   const customStyles = {
     control: (provided, state) => ({
@@ -40,6 +65,8 @@ const AddAgent = ({ user }) => {
       },
     }),
   };
+
+  
 
   const [form, setForm] = useState({
     nom: "",

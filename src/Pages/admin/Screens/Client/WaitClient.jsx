@@ -7,10 +7,9 @@ const WaitClient = ({ user }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
-  
 
   const fetchAwaitClient = async () => {
-    const token = localStorage.getItem("token"); // Remplacez 'your_token_here' par le token réel
+    const token = localStorage.getItem("token");
     try {
       const response = await fetch(`${API_ADMIN}/awaitClient`, {
         method: "GET",
@@ -60,17 +59,21 @@ const WaitClient = ({ user }) => {
               className="mb-4 p-4 border border-gray-300 rounded-lg w-72"
             />
             {filteredClients.length > 0 ? (
-              <ul className="space-y-4">
+              // Grille en colonne avec scroll vertical
+              <div
+                className="flex flex-col space-y-4  border-gray-300"
+                style={{ height: "700px", overflowY: "auto", padding: "10px" }}
+              >
                 {filteredClients.map((client) => (
-                  <li
+                  <div
                     key={client._id}
-                    className="bg-white p-7 rounded-lg shadow cursor-pointer hover:bg-blue-100"
+                    className="bg-white p-4 rounded-lg shadow cursor-pointer hover:bg-blue-100"
                     onClick={() => handleClientClick(client)}
                   >
-                    <div className="flex justify-between items-center">
+                    <div className="flex flex-col justify-between">
                       <div>
                         <p className="font-medium text-xl">
-                          {client.nom} {client.prenom}{" "}
+                          {client.nom} {client.prenom}
                         </p>
                         <p className="text-lg font-semibold">{client.email}</p>
                         <p className="text-sm text-gray-500">
@@ -86,14 +89,14 @@ const WaitClient = ({ user }) => {
                         </p>
                       </div>
                       <div>
-                        <button className="text-black p-3 rounded-lg bg-blue-500 hover:bg-blue-600 hover:text-white">
+                        <button className="text-black p-2 rounded-lg bg-blue-500 hover:bg-blue-600 hover:text-white">
                           Voir les détails
                         </button>
                       </div>
                     </div>
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
             ) : (
               <div className="flex items-center justify-center h-64">
                 <p className="text-red-500 text-xl font-medium">

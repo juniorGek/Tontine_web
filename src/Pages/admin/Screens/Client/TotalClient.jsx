@@ -6,8 +6,7 @@ const clients = [
   { id: 1, nom: 'Dupont', prenom: 'Jean', email: 'jean.dupont@example.com', tel: '0123456789' },
   { id: 2, nom: 'Martin', prenom: 'Claire', email: 'claire.martin@example.com', tel: '0987654321' },
   { id: 3, nom: 'Bernard', prenom: 'Paul', email: 'paul.bernard@example.com', tel: '0147258369' },
-  { id: 4, nom: 'Petit', prenom: 'Sophie', email: 'sophie.petit@example.com', tel: '0112233445' },
-  { id: 5, nom: 'Roux', prenom: 'Pierre', email: 'pierre.roux@example.com', tel: '0667788990' },
+  
   
 ];
 
@@ -44,7 +43,7 @@ const TotalClient = ({ user }) => {
 
   return (
     <SideBar user={user}>
-      <div className="p-6">
+      <div className="p-4">
         <h1 className="text-2xl font-bold mb-4">Liste des Clients</h1>
         
         <input
@@ -57,7 +56,7 @@ const TotalClient = ({ user }) => {
 
         <div className="space-y-4">
           {filteredClients.map(client => (
-            <div key={client.id} className="bg-white shadow-md rounded-lg p-4 flex justify-between items-center">
+            <div key={client.id} className="bg-white shadow-md rounded-lg p-3 flex justify-between items-center">
               <div>
                 <p><strong>ID:</strong> {client.id}</p>
                 <p><strong>Nom:</strong> {client.nom}</p>

@@ -1,11 +1,10 @@
 // Step4.js
-import React, { useEffect, useState } from 'react';
-import { API_ADMIN } from '../../config/endPoint';
+import React, { useEffect, useState } from "react";
+import { API_ADMIN } from "../../config/endPoint";
 
 const Step4 = ({ formData, setFormData, prevStep, handleSubmit }) => {
   const { typeCompte, note } = formData;
   const [compte, setCompte] = useState([]);
-
 
   const fetchCompte = async () => {
     const token = localStorage.getItem("token");
@@ -33,28 +32,27 @@ const Step4 = ({ formData, setFormData, prevStep, handleSubmit }) => {
     fetchCompte();
   }, []);
 
-
-
-
-
-
-
   return (
     <div className="p-4">
       <h2 className="text-xl font-bold mb-4">Step 4: Account Information</h2>
       <div className="grid grid-cols-1 gap-4">
         <select
           value={typeCompte}
-          onChange={(e) => setFormData({ ...formData, typeCompte: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, typeCompte: e.target.value })
+          }
           className="p-4 border border-gray-300 rounded-md"
         >
-          <option value="" disabled>Select compte</option>
-            {compte.map((compte, index) => (
-              <option key={index} value={compte._id}>
-                {compte.name}
-              </option>
-            ))}
+          <option value="" disabled>
+            Select compte
+          </option>
+          {compte.map((compte, index) => (
+            <option key={index} value={compte._id}>
+              {compte.name}
+            </option>
+          ))}
         </select>
+
         <textarea
           placeholder="Note"
           value={note}
@@ -63,14 +61,14 @@ const Step4 = ({ formData, setFormData, prevStep, handleSubmit }) => {
         ></textarea>
       </div>
       <div className="flex justify-between mt-4">
-        <button 
-          onClick={prevStep} 
+        <button
+          onClick={prevStep}
           className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600"
         >
           Precedent
         </button>
-        <button 
-          onClick={handleSubmit} 
+        <button
+          onClick={handleSubmit}
           className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
         >
           Soumettre
