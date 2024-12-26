@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import Header from '../../components/header'
 import Step1 from '../../components/Register/Step1';
 import Step2 from '../../components/Register/Step2';
@@ -94,7 +94,6 @@ const Register = () => {
     if (validateStep()) {
       console.log(formData)
       try {
-        const token = localStorage.getItem("token");
         const response = await fetch(`${API_ADMIN}/registerClient`, {
           method: "POST",
           headers: {

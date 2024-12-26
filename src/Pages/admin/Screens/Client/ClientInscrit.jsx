@@ -1,24 +1,56 @@
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SideBar from '../../global/SideBar'
 import QRCodeModal from '../../../../utils/ModalQr';
+import { API_ADMIN } from '../../../../config/endPoint';
+import LoadingModal from '../../../../utils/Loading';
+import { useNavigate } from 'react-router-dom';
 
-const clients = [
-  { id: 1, nom: 'Dupont', prenom: 'Jean', email: 'jean.dupont@example.com', tel: '0123456789' },
-  { id: 2, nom: 'Martin', prenom: 'Claire', email: 'claire.martin@example.com', tel: '0987654321' },
-  { id: 3, nom: 'Bernard', prenom: 'Paul', email: 'paul.bernard@example.com', tel: '0147258369' },
-  
-  
-];
+
 
 const TotalClient = ({ user }) => {
   const [search, setSearch] = useState('');
   const [selectedClient, setSelectedClient] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [client, setClient] = useState([]);
+  const navigate = useNavigate();
   
+  const fetchListeClient = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${API_ADMIN}/client/listeInscrit`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch users");
+      }
+      const data = await response.json();
+      setClient(data.listeClientsInscrits)
+    } catch (error) {
+      console.error("Erreur lors de la récupération de la liste des clients", error.message);
+      
+    }finally{
+      /* setTimeout(() => setLoading(false), 3000); */
+      setLoading(false)
+      
+    }
+   
+  }
+
+  useEffect(() => {
+    fetchListeClient();
+  }, []);
+
+
+
   const handleSearch = (event) => {
     setSearch(event.target.value);
   };
 
-  const filteredClients = clients.filter(client =>
+  const filteredClients = client.filter(client =>
     client.nom.toLowerCase().includes(search.toLowerCase()) ||
     client.prenom.toLowerCase().includes(search.toLowerCase()) ||
     client.email.toLowerCase().includes(search.toLowerCase()) ||
@@ -28,12 +60,13 @@ const TotalClient = ({ user }) => {
   const handleVoirPlus = (clientId) => {
     // Handle "Voir plus" click
     console.log(`Voir plus for client ID: ${clientId}`);
+    navigate(`/admin/detailClientInscrit/${clientId}`);
   };
 
   const handleAfficherCodeQR = (clientId) => {
-    const client = clients.find(client => client.id === clientId);
+    const selectClient = client.find(client => client._id === clientId);
     if (client) {
-      setSelectedClient(client);
+      setSelectedClient(selectClient);
     }
   };
 
@@ -43,7 +76,12 @@ const TotalClient = ({ user }) => {
 
   return (
     <SideBar user={user}>
-      <div className="p-4">
+       {loading ? (
+        <>  
+          <LoadingModal isOpen={loading} />
+        </>
+       ):(
+        <div className="p-4">
         <h1 className="text-2xl font-bold mb-4">Liste des Clients</h1>
         
         <input
@@ -56,9 +94,8 @@ const TotalClient = ({ user }) => {
 
         <div className="space-y-4">
           {filteredClients.map(client => (
-            <div key={client.id} className="bg-white shadow-md rounded-lg p-3 flex justify-between items-center">
+            <div key={client._id} className="bg-white shadow-md rounded-lg p-3 flex justify-between items-center">
               <div>
-                <p><strong>ID:</strong> {client.id}</p>
                 <p><strong>Nom:</strong> {client.nom}</p>
                 <p><strong>Prénom:</strong> {client.prenom}</p>
                 <p><strong>Email:</strong> {client.email}</p>
@@ -66,13 +103,13 @@ const TotalClient = ({ user }) => {
               </div>
               <div className="flex space-x-4">
                 <button
-                  onClick={() => handleVoirPlus(client.id)}
+                  onClick={() => handleVoirPlus(client._id)}
                   className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
                 >
                   Voir plus
                 </button>
                 <button
-                  onClick={() => handleAfficherCodeQR(client.id)}
+                  onClick={() => handleAfficherCodeQR(client._id)}
                   className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
                 >
                   Afficher le code QR
@@ -84,9 +121,10 @@ const TotalClient = ({ user }) => {
         <QRCodeModal
           isOpen={!!selectedClient}
           onClose={handleCloseModal}
-          qrCodeData={selectedClient ? `Client ID: ${selectedClient.id}, Name: ${selectedClient.nom} ${selectedClient.prenom}` : ''}
+          qrCodeData={selectedClient ? `Client ID: ${selectedClient._id}, Name: ${selectedClient.nom} ${selectedClient.prenom}` : ''}
         />
       </div>
+       )}
     </SideBar>
   );
 }

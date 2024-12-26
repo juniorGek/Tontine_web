@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import  { useEffect, useState } from "react";
 import SideBar from "../global/SideBar";
+import PropTypes from "prop-types";
 import Select from "react-select";
-import zoneOptions from "../../../components/Zone";
 import { API_ADMIN } from "../../../config/endPoint";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,7 +11,7 @@ import { useWelcome } from "../../../hook/WelcomeContext";
 const AddAgent = ({ user }) => {
   const [errors, setErrors] = useState({});
   const { setWelcomeMessage } = useWelcome();
-  const [zoneOptions, setZoneOptions] = useState([]);
+  const [zones, setZones] = useState([]);
   const navigate = useNavigate();
 
 
@@ -19,11 +19,17 @@ const AddAgent = ({ user }) => {
     const fetchZones = async () => {
       try {
         const token = localStorage.getItem('token');
-        console.log('token', token);
-        const response = await fetch(`${API_ADMIN}/listZone`, { method: "GET" });
+        const response = await fetch(`${API_ADMIN}/listZone`, 
+          { method: "GET" ,
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
         if (response.ok) {
-          const zones = await response.json();
-          console.log(zones);
+          const data = await response.json();
+          
+          setZones(data.listeZone || []);
         } else {
           console.error("Erreur lors de la récupération des zones");
         }
@@ -326,7 +332,7 @@ const AddAgent = ({ user }) => {
                 isMulti
                 isSearchable
                 name="zone"
-                options={zoneOptions}
+                options={zones.map((zone) => ({ value: zone.zoneName, label: zone.zoneName }))} // Utilisez les zones de l'état local
                 styles={customStyles}
                 className={`shadow appearance-none border rounded-xl w-full py-5 px-5 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
                   errors.zone ? "border-red-500" : ""
@@ -370,5 +376,10 @@ const AddAgent = ({ user }) => {
     </div>
   );
 };
+
+AddAgent.propTypes = {
+  user: PropTypes.object.isRequired,
+};
+
 
 export default AddAgent;

@@ -7,13 +7,11 @@ const Step4 = ({ formData, setFormData, prevStep, handleSubmit }) => {
   const [compte, setCompte] = useState([]);
 
   const fetchCompte = async () => {
-    const token = localStorage.getItem("token");
     try {
       const response = await fetch(`${API_ADMIN}/compte/liste`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -24,7 +22,7 @@ const Step4 = ({ formData, setFormData, prevStep, handleSubmit }) => {
       console.log(data.categories);
       setCompte(Array.isArray(data.categories) ? data.categories : []);
     } catch (error) {
-      console.error("Erreur lors de la récupération des utilisateurs", error);
+      console.error("Erreur lors de la récupération des comptes", error);
     }
   };
 

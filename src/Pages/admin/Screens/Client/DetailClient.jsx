@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import SideBar from "../../global/SideBar";
 import { API_ADMIN } from "../../../../config/endPoint";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Modal from "../../../../utils/CompteModal";
+import { useWelcome } from "../../../../hook/WelcomeContext";
+
 
 const formatDate = (dateString) => {
   const options = { day: "2-digit", month: "2-digit", year: "numeric" };
@@ -17,7 +19,15 @@ const DetailClient = () => {
   const [clientData, setClientData] = useState(null);
   const [listeAgent, setListeAgent] = useState([]);
 
+  const [montantCotisation, setMontantCotisation] = useState("");
+  const [selectedAgent, setSelectedAgent] = useState("");
+  const [note, setNote] = useState("");
+  const [motif, setMotif] = useState("");
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [ModalOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const { setWelcomeMessage } = useWelcome();
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -27,6 +37,13 @@ const DetailClient = () => {
     setIsModalOpen(false);
   };
 
+  const isOpen = () => {
+    setIsOpen(true);
+  };
+
+  const Isclose = () => {
+    setIsOpen(false);
+  };
 
   const fetchListeAgent = async () => {
     const token = localStorage.getItem("token"); // Remplacez 'your_token_here' par le token réel
@@ -43,7 +60,7 @@ const DetailClient = () => {
         throw new Error("Failed to fetch users");
       }
       const data = await response.json();
-      
+
       setListeAgent(data.listeAgent);
     } catch (error) {
       console.error("Error fetching client details:", error);
@@ -53,7 +70,6 @@ const DetailClient = () => {
   };
 
   useEffect(() => {
-
     const fetchUsers = async () => {
       const token = localStorage.getItem("token"); // Remplacez 'your_token_here' par le token réel
       try {
@@ -79,12 +95,63 @@ const DetailClient = () => {
 
     fetchUsers();
     fetchListeAgent();
-    
   }, [id]);
 
-  const confirm = async()=>{
-    console.log("Confirm")
-  }
+  const confirm = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${API_ADMIN}/client/validate/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body:JSON.stringify({note,montantCotisation,selectedAgent})
+        
+      });
+      if (!response.ok) {
+       console.error("Erreur lors de la confirmation du client");
+      }
+      const data = await response.json();
+      setWelcomeMessage(data.message);
+      closeModal();
+      navigate(`/admin/client`);
+      
+    } catch (error) {
+      console.error("Error confirming client:", error);
+      setWelcomeMessage("Erreur ............");
+      closeModal();
+      navigate(`/admin/client`);
+      
+    }
+  };
+
+  const reject = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${API_ADMIN}/client/reject/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({motif})
+      });
+      if (!response.ok) {
+       console.error("Erreur lors de la rejet du client");
+      }
+      setWelcomeMessage("Demande rejetée");
+      Isclose();
+      navigate(`/admin/client`);
+
+    } catch (error) {
+      Isclose();
+      console.error("Error rejecting client:", error);
+      
+    }
+    
+  };
+
 
 
   if (loading || loadingAgent) {
@@ -113,7 +180,6 @@ const DetailClient = () => {
 
   return (
     <SideBar>
-
       <div className="p-6 bg-white shadow-md rounded-lg max-w-4xl mx-auto mt-8">
         <h1 className="text-2xl font-semibold text-gray-800 mb-4">
           Client Details
@@ -202,36 +268,36 @@ const DetailClient = () => {
 
         {/* Action Buttons */}
         <div className="mt-6 flex justify-end space-x-4">
-          <button onClick={openModal} className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-            Finaliser l'inscription
+          <button
+            onClick={openModal}
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+          >
+            Finaliser l&apos;inscription
           </button>
-          <button className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
-            Rejeter l'inscription
+          <button
+            onClick={isOpen}
+            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+          >
+            Rejeter l&apos;inscription
           </button>
         </div>
       </div>
 
-
-
-
-      
-
       {/* Modal Usage */}
       <Modal isOpen={isModalOpen} closeModal={closeModal}>
-        <h2 className="text-2xl font-bold mb-4">Fill in the Form</h2>
+        <h2 className="text-2xl font-bold mb-4">Valider l&apos;inscription</h2>
+
         
-        <form 
-          onSubmit={confirm}
-        >
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Montant de cotisation
             </label>
             <input
               type="text"
-              onInput={(e) => {
-                e.target.value = e.target.value.replace(/[^0-9]/g, '');
-              }}
+              value={montantCotisation}
+              onChange={(e) =>
+                setMontantCotisation(e.target.value.replace(/[^0-9]/g, ""))
+              }
               className="w-full p-2 border border-gray-300 rounded"
             />
           </div>
@@ -242,27 +308,32 @@ const DetailClient = () => {
             </label>
 
             <select
-              defaultValue=""
-             className="w-full p-2 border border-gray-300 rounded"
+              value={selectedAgent}
+              onChange={(e) => setSelectedAgent(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded"
             >
-              <option value="" disabled>Selectionner agent</option>
+              <option value="" disabled>
+                Selectionner agent
+              </option>
               {listeAgent.map((agent, index) => (
                 <option key={index} value={agent._id}>
                   {`${agent.nom} ${agent.prenom} - ${agent.zone.join(", ")}`}
                 </option>
               ))}
             </select>
-
           </div>
-
 
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
-              Email
+              Note additional
             </label>
-            <input
-              type="email"
-              className="w-full p-2 border border-gray-300 rounded"
+            <textarea
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              className="shadow appearance-none border rounded-xl w-full py-5 px-5 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+              id="Note "
+              placeholder="Note"
+              rows="4"
             />
           </div>
           <div className="flex justify-end">
@@ -274,17 +345,40 @@ const DetailClient = () => {
               Cancel
             </button>
             <button
-              type="submit"
+              onClick={confirm}
               className="bg-green-500 text-white p-2 rounded-lg"
             >
               Submit
             </button>
           </div>
-        </form>
+        
       </Modal>
 
-
-
+      {/*reject modal*/}
+      <Modal isOpen={ModalOpen} closeModal={Isclose}>
+        <h2 className="text-2xl font-bold mb-4">Confirmer le rejet</h2>
+        
+          <div className="mb-4">
+            <textarea
+              className="shadow appearance-none border rounded-xl w-full py-5 px-5 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+              id="description"
+              value={motif}
+              onChange={(e) => setMotif(e.target.value)}
+              placeholder="Motif du rejet"
+              rows="4"
+            />
+          </div>
+          <div className="flex justify-end">
+            
+            <button
+              onClick={reject}
+              className="bg-red-700 text-white p-2 rounded-lg"
+            >
+              Confirmer
+            </button>
+          </div>
+        
+      </Modal>
 
     </SideBar>
   );

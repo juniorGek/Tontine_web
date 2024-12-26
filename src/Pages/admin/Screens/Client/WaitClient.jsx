@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import SideBar from "../../global/SideBar";
 import { useNavigate } from "react-router-dom";
 import { API_ADMIN } from "../../../../config/endPoint";
@@ -35,7 +35,7 @@ const WaitClient = ({ user }) => {
   }, []);
 
   const handleClientClick = (client) => {
-    navigate(`/admin/detailClient/${client._id}`);
+    navigate(`/admin/detailWaitClient/${client._id}`);
   };
 
   const filteredClients = users.filter(

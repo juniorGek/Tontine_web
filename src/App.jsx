@@ -1,11 +1,6 @@
-import { useState } from "react";
-
-import Nav from "./components/nav";
-import Main from "./components/main";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Home from "./Pages/home";
 import Contact from "./Pages/Contact";
-import Header from "./components/header";
 import About from "./Pages/About";
 import Service from "./Pages/Service";
 import NotFound from "./Pages/NotFound";
@@ -26,20 +21,20 @@ import WaitClient from "./Pages/admin/Screens/Client/WaitClient";
 import FonctionList from "./Pages/admin/Screens/Fonctions/FonctionList";
 import AfterRegister from "./Pages/Auth/AfterRegister";
 import DetailClient from "./Pages/admin/Screens/Client/DetailClient";
-import TotalClient from "./Pages/admin/Screens/Client/TotalClient";
+import TotalClient from "./Pages/admin/Screens/Client/ClientInscrit";
 import Categorie from "./Pages/admin/Screens/Fonctions/Categorie";
 import Zone from "./Pages/admin/Screens/Fonctions/Zone";
+import Details from "./Pages/admin/Screens/Client/Details";
 
 function App() {
   return (
     <>
       <Routes>
-
         {/* <Route path="/" index element={<Home />} /> */}
 
         {/* Redirection par défaut vers /home/fr */}
         <Route path="/" element={<Navigate to="/home/fr" replace />} />
-        
+
         {/* Route dynamique pour la page d'accueil avec paramètre de langue */}
         <Route path="/home/:lang" element={<Home />} />
 
@@ -97,13 +92,18 @@ function App() {
         />
 
         <Route
-          path="/admin/totalclient"
+          path="/admin/clientInscrit"
           element={<ProtectedRoute element={<TotalClient />} />}
         />
 
         <Route
-          path="/admin/detailClient/:id"
+          path="/admin/detailWaitClient/:id"
           element={<ProtectedRoute element={<DetailClient />} />}
+        />
+
+        <Route
+          path="/admin/detailClientInscrit/:id"
+          element={<ProtectedRoute element={<Details />} />}
         />
 
         <Route
@@ -120,7 +120,6 @@ function App() {
           path="/admin/Fonctions/zone"
           element={<ProtectedRoute element={<Zone />} />}
         />
-
 
         <Route
           path="/admin/logout"

@@ -1,4 +1,4 @@
-export const API_ADMIN = 'http://10.10.3.140:4000';
+export const API_ADMIN = 'http://192.168.1.67:3000';
 
 
 
